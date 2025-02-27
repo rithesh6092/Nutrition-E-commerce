@@ -179,4 +179,7 @@ class ProductController extends Controller
             'data' => new ProductResource($user),
         ], 200);
     }
+
+    public function delete()
+    {}
 }
