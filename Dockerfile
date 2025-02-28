@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libxml2-dev \
     libcurl4-openssl-dev \
-    libmysqlclient-dev \
+    libmariadb-dev-compat \  # Replace libmysqlclient-dev with libmariadb-dev-compat
     && apt-get clean
 
 # Install necessary PHP build dependencies
