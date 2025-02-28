@@ -13,16 +13,8 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libmariadb-dev-compat && apt-get clean
 
-# Install necessary PHP build dependencies
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    && docker-php-ext-install pdo pdo_mysql
-
-# Install the GD extension for image processing
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd
+# Install necessary PHP extensions in a single step
+RUN docker-php-ext-install pdo pdo_mysql gd sodium zip curl xml
 
 # Install Composer (the PHP dependency manager)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
