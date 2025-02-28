@@ -983,9 +983,9 @@
                         ],
                         "example": 1
                     },
-                    "quantity": {
+                    "stock": {
                         "description": "Stock quantity",
-                        "type": "integer",
+                        "type": "string",
                         "example": 50
                     },
                     "svp_points": {
