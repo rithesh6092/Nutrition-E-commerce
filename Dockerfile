@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libxml2-dev \
     libcurl4-openssl-dev \
-    libmysqlclient-dev \  # MySQL client libraries required for pdo_mysql
+    libmysqlclient-dev && \  # MySQL client libraries required for pdo_mysql
     docker-php-ext-configure gd --with-freetype --with-jpeg && \  # Configure GD extension
     docker-php-ext-install gd pdo pdo_mysql  # Install PDO and PDO MySQL extensions
 
