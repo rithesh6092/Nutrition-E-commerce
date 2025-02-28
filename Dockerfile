@@ -11,9 +11,19 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libxml2-dev \
     libcurl4-openssl-dev \
-    libmysqlclient-dev && \  # MySQL client libraries required for pdo_mysql
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \  # Configure GD extension
-    docker-php-ext-install gd pdo pdo_mysql  # Install PDO and PDO MySQL extensions
+    libmysqlclient-dev \
+    && apt-get clean
+
+# Install necessary PHP build dependencies
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-install pdo pdo_mysql
+
+# Install the GD extension for image processing
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install gd
 
 # Install Composer (the PHP dependency manager)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
