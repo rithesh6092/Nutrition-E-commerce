@@ -22,13 +22,21 @@ php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
 
-# Publish and generate Swagger documentation
-php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider" --tag=l5-swagger --force
-php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider" --tag=assets --force
-php artisan l5-swagger:generate
-
 # Create storage link (with force flag to overwrite if exists)
 php artisan storage:link --force
+
+# Publish and generate Swagger documentation
+php artisan l5-swagger:generate
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider" --tag=l5-swagger --force
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider" --tag=assets --force
+
+# Ensure Swagger assets are in the correct location
+mkdir -p public/vendor/l5-swagger
+cp -r vendor/swagger-api/swagger-ui/dist/* public/vendor/l5-swagger/
+
+# Set proper permissions for published assets
+chown -R www-data:www-data /var/www/public/vendor
+chmod -R 775 /var/www/public/vendor
 
 # Start the application
 PORT=${PORT:-8000}

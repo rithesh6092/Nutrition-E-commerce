@@ -44,6 +44,11 @@ RUN composer dump-autoload --optimize
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && \
     chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
+# Ensure public directory is writable
+RUN mkdir -p /var/www/public/vendor && \
+    chown -R www-data:www-data /var/www/public && \
+    chmod -R 775 /var/www/public
+
 # Copy and set up entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
