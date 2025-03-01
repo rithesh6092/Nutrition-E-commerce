@@ -37,10 +37,8 @@ RUN composer install --no-scripts --no-autoloader
 # Copy the rest of the application
 COPY . .
 
-# Generate autoloader and clear cache
-RUN composer dump-autoload --optimize && \
-    php artisan config:clear && \
-    php artisan cache:clear
+# Generate optimized autoloader
+RUN composer dump-autoload --optimize
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && \
