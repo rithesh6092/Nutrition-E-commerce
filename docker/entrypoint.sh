@@ -22,9 +22,10 @@ php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
 
-# Generate swagger documentation and publish assets
-php artisan l5-swagger:generate
+# Publish and generate Swagger documentation
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider" --tag=l5-swagger --force
 php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider" --tag=assets --force
+php artisan l5-swagger:generate
 
 # Create storage link (with force flag to overwrite if exists)
 php artisan storage:link --force

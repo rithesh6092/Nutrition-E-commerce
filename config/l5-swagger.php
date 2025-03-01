@@ -55,6 +55,11 @@ return [
     'defaults' => [
         'routes' => [
             /*
+             * Route for accessing api documentation interface
+             */
+            'api' => 'api/documentation',
+            
+            /*
              * Route for accessing parsed swagger annotations.
              */
             'docs' => 'docs',
@@ -245,7 +250,7 @@ return [
         /*
          * Set this to `true` to generate a copy of documentation in yaml format
          */
-        'generate_yaml_copy' => env('L5_SWAGGER_GENERATE_YAML_COPY', false),
+        'generate_yaml_copy' => false,
 
         /*
          * Edit to trust the proxy's ip address - needed for AWS Load Balancer
