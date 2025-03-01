@@ -10,11 +10,11 @@
     },
     "servers": [
         {
-            "url": "http://192.168.0.126:9000",
+            "url": "http://localhost",
             "description": "Test API Server"
         },
         {
-            "url": "http://192.168.0.126:9000"
+            "url": "http://localhost"
         }
     ],
     "paths": {
@@ -719,6 +719,101 @@
                 ]
             }
         },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get list of orders",
+                "operationId": "2cd7e03021e72d9d799c12dfe179c865",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "customer_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "format": "decimal"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "pending",
+                                                            "processing",
+                                                            "completed",
+                                                            "cancelled"
+                                                        ]
+                                                    },
+                                                    "payment_status": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "pending",
+                                                            "paid",
+                                                            "failed"
+                                                        ]
+                                                    },
+                                                    "items": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "product_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "quantity": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "unit_price": {
+                                                                    "type": "number"
+                                                                },
+                                                                "subtotal": {
+                                                                    "type": "number"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -1074,6 +1169,46 @@
                 },
                 "type": "object"
             },
+            "OrderItem": {
+                "title": "Order Item",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "order_id": {
+                        "type": "integer"
+                    },
+                    "product_id": {
+                        "type": "integer"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    },
+                    "unit_price": {
+                        "type": "number",
+                        "format": "decimal"
+                    },
+                    "subtotal": {
+                        "type": "number",
+                        "format": "decimal"
+                    },
+                    "product": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "number"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
             "ProductResource": {
                 "title": "ProductResource",
                 "description": "Product resource representation",
@@ -1159,6 +1294,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Orders",
+            "description": "API Endpoints for Orders"
+        },
         {
             "name": "Admin",
             "description": "Admin"
