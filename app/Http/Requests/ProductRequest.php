@@ -41,6 +41,7 @@ class ProductRequest extends FormRequest
             'name' => 'required|string|unique:products,name',
             'category_id' => 'required|exists:product_categories,id',
             'status' => 'required|in:0,1',
+            'image_url' => 'required|string',
             'quantity' => 'required|string',
             'svp_points' => 'nullable|integer',
             'price' => 'required|numeric',

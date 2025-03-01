@@ -63,6 +63,7 @@ class ProductController extends Controller
             'svp_points' => $request->svp_points,
             'mrp' => $request->price,
             'weight' => $request->weight,
+            'image_url' => $request->image_url,
         ]);
 
         return response()->json([
