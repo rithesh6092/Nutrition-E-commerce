@@ -11,39 +11,43 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libxml2-dev \
     libcurl4-openssl-dev \
-    libmariadb-dev-compat && apt-get clean
+    libmariadb-dev-compat \
+    libonig-dev \
+    && apt-get clean
 
-# Install necessary PHP build dependencies
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    && docker-php-ext-install pdo pdo_mysql
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath
 
 # Install the GD extension for image processing
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd
 
-# Install Composer (the PHP dependency manager)
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /var/www
 
-# Copy the entire application to the container
+# Copy composer files first to leverage Docker cache
+COPY composer.json composer.lock ./
+
+# Install dependencies
+RUN composer install --no-scripts --no-autoloader
+
+# Copy the rest of the application
 COPY . .
 
-# Install Laravel dependencies using Composer
-RUN composer install --no-dev --optimize-autoloader
+# Generate autoloader and clear cache
+RUN composer dump-autoload --optimize && \
+    php artisan config:clear && \
+    php artisan cache:clear
 
-# Expose port 8000 (the default port for Laravel using `php artisan serve`)
-EXPOSE 8000
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && \
+    chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Copy the entrypoint script to the container
+# Copy and set up entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Command to start the Laravel application using Artisan
-CMD ["php", "artisan", "serve", "--host", "0.0.0.0", "--port", "8000"]
-
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
