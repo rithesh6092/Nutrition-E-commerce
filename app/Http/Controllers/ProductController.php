@@ -180,6 +180,10 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function delete()
-    {}
+    public function update(ProductRequest $request) 
+    {
+        
+    }
+
+    public function delete() {}
 }

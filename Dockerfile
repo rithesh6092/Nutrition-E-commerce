@@ -39,5 +39,11 @@ RUN composer install --no-dev --optimize-autoloader
 # Expose port 8000 (the default port for Laravel using `php artisan serve`)
 EXPOSE 8000
 
+# Copy the entrypoint script to the container
+COPY docker/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Command to start the Laravel application using Artisan
 CMD ["php", "artisan", "serve", "--host", "0.0.0.0", "--port", "8000"]
+
+ENTRYPOINT ["entrypoint.sh"]
