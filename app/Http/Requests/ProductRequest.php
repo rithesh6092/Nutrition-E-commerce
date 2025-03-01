@@ -18,6 +18,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
  *     @OA\Property(property="svp_points", type="integer", nullable=true, example=10, description="SVP points, optional"),
  *     @OA\Property(property="price", type="number", format="float", example=299.99, description="Product price"),
  *     @OA\Property(property="weight", type="string", example="500g", description="Product weight"),
+ *     @OA\Property(property="image_url", type="string", example="https://image.jpeg", description="Product image"),
  * )
  */
 class ProductRequest extends FormRequest

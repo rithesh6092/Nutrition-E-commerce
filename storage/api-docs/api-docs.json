@@ -814,6 +814,95 @@
                 }
             }
         },
+        "/api/orders/{order}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get order details",
+                "operationId": "f090f23952a43521af6f1d133826bc37",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "description": "Order ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "amount": {
+                                            "type": "number"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "payment_status": {
+                                            "type": "string"
+                                        },
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "order_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "product_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    },
+                                                    "unit_price": {
+                                                        "type": "number"
+                                                    },
+                                                    "subtotal": {
+                                                        "type": "number"
+                                                    },
+                                                    "product": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "price": {
+                                                                "type": "number"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -1114,6 +1203,11 @@
                         "description": "Product weight",
                         "type": "string",
                         "example": "500g"
+                    },
+                    "image_url": {
+                        "description": "Product image",
+                        "type": "string",
+                        "example": "https://image.jpeg"
                     }
                 },
                 "type": "object"
@@ -1165,46 +1259,6 @@
                     "registered_on": {
                         "type": "string",
                         "example": "2024-02-24"
-                    }
-                },
-                "type": "object"
-            },
-            "OrderItem": {
-                "title": "Order Item",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "order_id": {
-                        "type": "integer"
-                    },
-                    "product_id": {
-                        "type": "integer"
-                    },
-                    "quantity": {
-                        "type": "integer"
-                    },
-                    "unit_price": {
-                        "type": "number",
-                        "format": "decimal"
-                    },
-                    "subtotal": {
-                        "type": "number",
-                        "format": "decimal"
-                    },
-                    "product": {
-                        "properties": {
-                            "id": {
-                                "type": "integer"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "price": {
-                                "type": "number"
-                            }
-                        },
-                        "type": "object"
                     }
                 },
                 "type": "object"
