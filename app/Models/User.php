@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+     // Define the scopeActive method
+     public function scopeActive($query)
+     {
+         return $query->where('status', 1);
+     }
 }

@@ -33,6 +33,7 @@ class CustomerResource extends JsonResource
             'name' => $this?->name,
             'email' => $this->email,
             'mobile' => $this->mobile_no,
+            'svp_points' => 0,
             'role' => $this->role,
             'status' => $this->status == 1 ? 'active' : 'in-active',
         ];

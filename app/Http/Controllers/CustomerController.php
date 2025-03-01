@@ -97,6 +97,13 @@ class CustomerController extends ApiController
      *     operationId="getCustomers",
      *     tags={"Customers"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         required=false,
+     *         description="Filter customers by status. Allowed values: active, inactive",
+     *         @OA\Schema(type="string", enum={"active", "inactive"})
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Customers Fetched Successfully",
@@ -126,7 +133,20 @@ class CustomerController extends ApiController
      */
     public function index(Request $request): JsonResponse
     {
-        $customers = User::all();
+        $query = User::query();
+
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->active(); // Using the local scope
+            } elseif ($request->status === 'inactive') {
+                $query->where(function ($q) {
+                    $q->where('status', '!=', 1);
+                });
+            }
+        }
+
+        $customers = $query->get();
+
         return response()->json([
             'message' => 'Customer Fetched Successfully',
             'status' => 200,

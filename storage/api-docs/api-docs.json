@@ -389,6 +389,21 @@
                 "summary": "Get all customers",
                 "description": "Fetches all customers from the database. Requires authentication.",
                 "operationId": "getCustomers",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter customers by status. Allowed values: active, inactive",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Customers Fetched Successfully",
