@@ -6,15 +6,14 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Traits\CustomPaginationTrait;
+use App\Http\Resources\OrderResource;
 
-/**
- * @OA\Tag(
- *     name="Orders",
- *     description="API Endpoints for Orders"
- * )
- */
+
 class OrderController extends Controller
 {
+    use CustomPaginationTrait;
+
     /**
      * @OA\Get(
      *     path="/api/orders",
@@ -54,10 +53,16 @@ class OrderController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['customer', 'items.product'])->latest()->paginate(10);
-        return response()->json($orders);
+        $orders = Order::with(['customer', 'items.product'])->latest()->paginate($request->per_page ?? 10);
+        
+        return response()->json([
+            'message' => 'Orders fetched successfully',
+            'status' => 200,
+            'data' => OrderResource::collection($orders),
+            'pagination' => self::buildPagination($orders, 'orders')
+        ], 200);
     }
 
 

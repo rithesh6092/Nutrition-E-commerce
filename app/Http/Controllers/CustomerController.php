@@ -7,12 +7,15 @@ use App\Http\Resources\CustomerResource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use App\Traits\CustomPaginationTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class CustomerController extends ApiController
 {
+    use CustomPaginationTrait;
+
     /**
      * @OA\Post(
      *     path="/api/customers",
@@ -145,12 +148,13 @@ class CustomerController extends ApiController
             }
         }
 
-        $customers = $query->get();
+        $customers = $query->paginate($request->per_page ?? 10);
 
         return response()->json([
             'message' => 'Customer Fetched Successfully',
             'status' => 200,
             'data' => CustomerResource::collection($customers),
+            'pagination' => self::buildPagination($customers)
         ], 200);
     }
 

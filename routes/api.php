@@ -17,6 +17,8 @@ Route::post('/login', [AuthController::class,'adminLogin']);
 Route::resource('customers', CustomerController::class);
 Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
+Route::put('/products/status/{product}', [ProductController::class, 'updateProductStatus']);
+
 
 // Order routes
 Route::apiResource('orders', OrderController::class);

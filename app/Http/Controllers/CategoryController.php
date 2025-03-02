@@ -23,7 +23,7 @@ class CategoryController extends Controller
      *         @OA\JsonContent(
      *             required={"name", "status"},
      *             @OA\Property(property="name", type="string", example="Protein"),
-     *             @OA\Property(property="status", type="string", example="active", enum={"active", "inactive"})
+     *             @OA\Property(property="status", type="integer", enum={0,1}, example=1, description="Product status: 1 for active, 0 for inactive.")
      *         )
      *     ),
      *     @OA\Response(

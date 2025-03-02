@@ -10,11 +10,11 @@ use Illuminate\Http\Exceptions\HttpResponseException;
  * @OA\Schema(
  *     schema="ProductRequest",
  *     type="object",
- *     required={"name", "category_id", "status", "quantity", "price", "weight"},
+ *     required={"name", "category_id", "status", "quantity", "price", "weight","image_url"},
  *     @OA\Property(property="name", type="string", example="Protein Shake", description="Unique product name"),
  *     @OA\Property(property="category_id", type="integer", example=1, description="Must exist in the categories table"),
  *     @OA\Property(property="status", type="integer", enum={0,1}, example=1, description="0 for inactive, 1 for active"),
- *     @OA\Property(property="stock", type="string", example=50, description="Stock quantity"),
+ *     @OA\Property(property="quantity", type="string", example=50, description="Stock quantity"),
  *     @OA\Property(property="svp_points", type="integer", nullable=true, example=10, description="SVP points, optional"),
  *     @OA\Property(property="price", type="number", format="float", example=299.99, description="Product price"),
  *     @OA\Property(property="weight", type="string", example="500g", description="Product weight"),
@@ -44,7 +44,6 @@ class ProductRequest extends FormRequest
             'status' => 'required|in:0,1',
             'image_url' => 'required|string',
             'quantity' => 'required|string',
-            'svp_points' => 'nullable|integer',
             'price' => 'required|numeric',
             'weight' => 'required|string',
         ];

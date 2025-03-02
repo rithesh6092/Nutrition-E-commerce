@@ -164,12 +164,13 @@
                                         "example": "Protein"
                                     },
                                     "status": {
-                                        "type": "string",
+                                        "description": "Product status: 1 for active, 0 for inactive.",
+                                        "type": "integer",
                                         "enum": [
-                                            "active",
-                                            "inactive"
+                                            0,
+                                            1
                                         ],
-                                        "example": "active"
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -909,8 +910,30 @@
                     "Products"
                 ],
                 "summary": "Get all products",
-                "description": "Fetches a list of all available products",
+                "description": "Fetches a paginated list of all available products",
                 "operationId": "getProducts",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Products Fetched Successfully",
@@ -931,6 +954,13 @@
                                             "items": {
                                                 "$ref": "#/components/schemas/ProductResource"
                                             }
+                                        },
+                                        "pagination": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/PaginationResource"
+                                                }
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -951,22 +981,6 @@
                                         "status": {
                                             "type": "integer",
                                             "example": 500
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated"
                                         }
                                     },
                                     "type": "object"
@@ -1148,6 +1162,212 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product",
+                "description": "Updates an existing product's information",
+                "operationId": "c474d1318e5b8c3de1f4d52b6053111f",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "description": "ID of product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product Updated Successfully"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product not found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/status/{product}": {
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update product status",
+                "description": "Updates the status of a product to either active (1) or inactive (0).",
+                "operationId": "894db30ca3b01279265df7167725cde3",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "description": "ID of the product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "description": "Product status: 1 for active, 0 for inactive.",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Product Name"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The status field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -1160,7 +1380,8 @@
                     "status",
                     "quantity",
                     "price",
-                    "weight"
+                    "weight",
+                    "image_url"
                 ],
                 "properties": {
                     "name": {
@@ -1182,7 +1403,7 @@
                         ],
                         "example": 1
                     },
-                    "stock": {
+                    "quantity": {
                         "description": "Stock quantity",
                         "type": "string",
                         "example": 50
@@ -1192,6 +1413,60 @@
                         "type": "integer",
                         "example": 10,
                         "nullable": true
+                    },
+                    "price": {
+                        "description": "Product price",
+                        "type": "number",
+                        "format": "float",
+                        "example": 299.99
+                    },
+                    "weight": {
+                        "description": "Product weight",
+                        "type": "string",
+                        "example": "500g"
+                    },
+                    "image_url": {
+                        "description": "Product image",
+                        "type": "string",
+                        "example": "https://image.jpeg"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProductRequest": {
+                "required": [
+                    "name",
+                    "category_id",
+                    "status",
+                    "quantity",
+                    "price",
+                    "weight",
+                    "image_url"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Unique product name",
+                        "type": "string",
+                        "example": "Protein Shake"
+                    },
+                    "category_id": {
+                        "description": "Must exist in the categories table",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "description": "0 for inactive, 1 for active",
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "example": 1
+                    },
+                    "quantity": {
+                        "description": "Stock quantity",
+                        "type": "string",
+                        "example": 50
                     },
                     "price": {
                         "description": "Product price",
@@ -1335,6 +1610,52 @@
                 "xml": {
                     "name": "ProductResource"
                 }
+            },
+            "PaginationResource": {
+                "title": "PaginationResource",
+                "description": "Pagination meta info resource",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "example": 100
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "next_page_url": {
+                        "type": "string",
+                        "example": "http://example.com/api/products?page=2",
+                        "nullable": true
+                    },
+                    "prev_page_url": {
+                        "type": "string",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "url": {
+                        "properties": {
+                            "path": {
+                                "type": "string",
+                                "example": "http://example.com/api/products"
+                            },
+                            "pageName": {
+                                "type": "string",
+                                "example": "page"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -1349,10 +1670,6 @@
     },
     "tags": [
         {
-            "name": "Orders",
-            "description": "API Endpoints for Orders"
-        },
-        {
             "name": "Admin",
             "description": "Admin"
         },
@@ -1363,6 +1680,10 @@
         {
             "name": "Customers",
             "description": "Customers"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
         },
         {
             "name": "Products",
