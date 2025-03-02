@@ -11,6 +11,7 @@ use App\Traits\CustomPaginationTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\UpdateCustomerRequest;
 
 class CustomerController extends ApiController
 {
@@ -258,5 +259,76 @@ class CustomerController extends ApiController
         // Delete the customer
         $customer->delete();
         return response()->json(['message' => 'Customer deleted successfully', 'status' => 200], 200);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/customers/{customer}",
+     *     summary="Update customer details",
+     *     description="Updates an existing customer's information",
+     *     tags={"Customers"},
+     *     @OA\Parameter(
+     *         name="customer",
+     *         in="path",
+     *         required=true,
+     *         description="ID of customer to update",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/UpdateCustomerRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Customer updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Customer Updated Successfully"),
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="data", ref="#/components/schemas/CustomerResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Customer not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Customer not found"),
+     *             @OA\Property(property="status", type="integer", example=404)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Validation error"),
+     *             @OA\Property(property="status", type="integer", example=422),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function update(UpdateCustomerRequest $request, User $customer)
+    {
+        try {
+            $customer->update([
+                'name' => $request->name ?? $customer->name,
+                'email' => $request->email ?? $customer->email,
+                'mobile_no' => $request->mobile_number ?? $customer->mobile_no,
+                'address' => $request->address ?? $customer->address,
+                'status' => $request->status ?? $customer->status
+            ]);
+
+            return response()->json([
+                'message' => 'Customer Updated Successfully',
+                'status' => 200,
+                'data' => new CustomerResource($customer->fresh())
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update customer',
+                'status' => 500,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
