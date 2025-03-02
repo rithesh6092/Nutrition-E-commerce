@@ -1545,6 +1545,10 @@
                         "type": "string",
                         "example": "1234567890"
                     },
+                    "profile_image": {
+                        "type": "string",
+                        "example": "https://profile.jpeg"
+                    },
                     "status": {
                         "type": "integer",
                         "enum": [
@@ -1640,6 +1644,10 @@
                     "email": {
                         "type": "string",
                         "example": "johndoe@example.com"
+                    },
+                    "profile_image": {
+                        "type": "string",
+                        "example": "https://profile.jpeg"
                     },
                     "phone": {
                         "type": "string",
