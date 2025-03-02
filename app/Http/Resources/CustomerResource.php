@@ -13,6 +13,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="John Doe"),
  *     @OA\Property(property="email", type="string", example="johndoe@example.com"),
+ *     @OA\Property(property="profile_image", type="string", example="https://profile.jpeg"),
  *     @OA\Property(property="phone", type="string", example="+1234567890"),
  *     @OA\Property(property="status", type="string", example="active"),
  *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-02-24T12:34:56Z"),
@@ -31,6 +32,7 @@ class CustomerResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this?->name,
+            'profile_image' => $this->avatar,
             'email' => $this->email,
             'mobile' => $this->mobile_no,
             'svp_points' => 0,

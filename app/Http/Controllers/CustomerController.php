@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\UpdateCustomerRequest;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class CustomerController extends ApiController
 {
@@ -314,7 +315,8 @@ class CustomerController extends ApiController
                 'email' => $request->email ?? $customer->email,
                 'mobile_no' => $request->mobile_number ?? $customer->mobile_no,
                 'address' => $request->address ?? $customer->address,
-                'status' => $request->status ?? $customer->status
+                'status' => $request->status ?? $customer->status,
+                'profile_image' => $request->profile_image
             ]);
 
             return response()->json([

@@ -14,6 +14,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
  *     @OA\Property(property="name", type="string", example="John Doe"),
  *     @OA\Property(property="email", type="string", format="email", example="john@example.com"),
  *     @OA\Property(property="mobile_number", type="string", example="1234567890"),
+ *     @OA\Property(property="profile_image", type="string", example="https://profile.jpeg"),
  *     @OA\Property(property="status", type="integer", enum={0,1}, example=1)
  * )
  */
@@ -48,7 +49,8 @@ class UpdateCustomerRequest extends FormRequest
                 Rule::unique('users', 'mobile_no')->ignore($this->customer)
             ],
             'address' => ['sometimes', 'string'],
-            'status' => ['sometimes', 'integer', 'in:0,1']
+            'status' => ['sometimes', 'integer', 'in:0,1'],
+            'profile_image' => ['sometimes', 'string']
         ];
     }
 
