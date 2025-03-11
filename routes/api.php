@@ -15,7 +15,9 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class,'adminLogin']);
 
 Route::resource('customers', CustomerController::class);
+Route::put('/customers/status/{customer}', [CustomerController::class, 'updateCustomerStatus']);
 Route::resource('categories', CategoryController::class);
+Route::put('/categories/status/{category}', [CategoryController::class, 'updateCategoryStatus']);
 Route::resource('products', ProductController::class);
 Route::put('/products/status/{product}', [ProductController::class, 'updateProductStatus']);
 

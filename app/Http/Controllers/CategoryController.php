@@ -182,4 +182,24 @@ class CategoryController extends Controller
             'data' => $category,
         ], 200);
     }
+
+    public function updateCategoryStatus(ProductCategory $category, Request $request)
+    {
+        $validated = $request->validate(
+            [
+                'status' => 'required|in:0,1',
+            ],
+            [
+                'status.required' => 'status is required.',
+                'status.in' => 'status must be either 1 or 0.',
+            ]
+        );
+
+        $category->update(['status' => $validated['status']]);
+        return response()->json([
+            'message' => 'Category status updated successfully',
+            'status' => 200,
+            'data' => new CategoryResource($category->fresh()),
+        ], 200);
+    }
 }

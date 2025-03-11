@@ -333,4 +333,70 @@ class CustomerController extends ApiController
             ], 500);
         }
     }
+
+     /**
+     * @OA\Put(
+     *     path="/api/customers/status/{customer}",
+     *     summary="Update customer status",
+     *     description="Updates the status of a customer to either active (1) or inactive (0).",
+     *     tags={"Customers"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="customer",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the customer to update",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="integer", enum={0,1}, example=1, description="Customer status: 1 for active, 0 for inactive.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Customer status updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Product Name"),
+     *             @OA\Property(property="status", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The status field is required.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Customer not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product not found.")
+     *         )
+     *     )
+     * )
+     */
+    public function updateCustomerStatus(User $customer, Request $request)
+    {
+        $validated = $request->validate(
+            [
+                'status' => 'required|in:0,1',
+            ],
+            [
+                'status.required' => 'status is required.',
+                'status.in' => 'status must be either 1 or 0.',
+            ]
+        );
+
+        $customer->update(['status' => $validated['status']]);
+        return response()->json([
+            'message' => 'Customer status updated successfully',
+            'status' => 200,
+            'data' => new CustomerResource($customer->fresh()),
+        ], 200);
+    }
 }

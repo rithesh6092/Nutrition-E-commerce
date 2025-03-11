@@ -85,11 +85,11 @@ class ProductController extends Controller
      *     operationId="getProducts",
      *     tags={"Products"},
      *     @OA\Parameter(
-     *         name="page",
+     *         name="status",
      *         in="query",
-     *         description="Page number",
      *         required=false,
-     *         @OA\Schema(type="integer", default=1)
+     *         description="Filter products by status. Allowed values: active, inactive",
+     *         @OA\Schema(type="string", enum={"active", "inactive"})
      *     ),
      *     @OA\Parameter(
      *         name="per_page",
@@ -97,6 +97,13 @@ class ProductController extends Controller
      *         description="Number of items per page",
      *         required=false,
      *         @OA\Schema(type="integer", default=10)
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -130,9 +137,23 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = $request->input('per_page', 10);
-        $products = Product::with('category')->paginate($perPage);
-        
+        // $perPage = $request->input('per_page', 10);
+
+        // $products = Product::with('category')->paginate($perPage);
+        $query = Product::query()->with('category');
+
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->active(); // Using the local scope
+            } elseif ($request->status === 'inactive') {
+                $query->where(function ($q) {
+                    $q->where('status', '!=', 1);
+                });
+            }
+        }
+
+        $products = $query->paginate($request->per_page ?? 10);
+
         return response()->json([
             'message' => 'Products Fetched Successfully',
             'status' => 200,
