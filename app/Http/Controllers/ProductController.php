@@ -362,4 +362,90 @@ class ProductController extends Controller
             'data' => new ProductResource($product),
         ], 200);
     }
+
+     /**
+     * Get products by category with pagination.
+     *
+     * @OA\Get(
+     *     path="/api/productsbycategory/{category}",
+     *     summary="Get products by category",
+     *     description="Fetch products based on the category with pagination.",
+     *     operationId="getProductsByCategory",
+     *     tags={"Web API's"},
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="path",
+     *         description="Category slug or ID",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number for pagination",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Products Fetched Successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Products Fetched Successfully"),
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(
+     *                  property="data",
+     *                  type="array",
+     *                  @OA\Items(ref="#/components/schemas/ProductResource")
+     *             ),
+     *             @OA\Property(
+     *                 property="pagination",
+     *                 allOf={
+     *                     @OA\Schema(ref="#/components/schemas/PaginationResource")
+     *                 }
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No products found for this category",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="No products found for this category")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Something went wrong.")
+     *         )
+     *     )
+     * )
+     */
+    public function productbycategory($category, Request $request)
+    {
+        $products = Product::where('category_id', $category)
+            ->with(['category:id,name'])  // Eager load category with only id and name
+            ->paginate($request->per_page ?? 10);
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No products found for this category', 'status' => 404], 404);
+        }
+
+        return response()->json([
+            'message' => 'Product details fetched successfully',
+            'status' => 200,
+            'data' => ProductResource::collection($products),
+            'pagination' => self::buildPagination($products, 'products')
+        ], 200);
+    }
 }

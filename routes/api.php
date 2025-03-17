@@ -12,7 +12,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/login', [AuthController::class,'adminLogin']);
+// Route::post('/login', [AuthController::class,'adminLogin']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/verifyOTP', [AuthController::class, 'verifyOTP']);
 
 Route::resource('customers', CustomerController::class);
 Route::put('/customers/status/{customer}', [CustomerController::class, 'updateCustomerStatus']);
@@ -26,4 +28,9 @@ Route::put('/products/status/{product}', [ProductController::class, 'updateProdu
 Route::apiResource('orders', OrderController::class);
 Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus']);
 Route::patch('orders/{order}/payment-status', [OrderController::class, 'updatePaymentStatus']);
+
+//web routes
+Route::get('/active-categories', [CategoryController::class, 'webCategories']);
+Route::get('/productsbycategory/{category}', [ProductController::class,'productbycategory']);
+
 

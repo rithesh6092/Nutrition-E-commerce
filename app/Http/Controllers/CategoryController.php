@@ -202,4 +202,41 @@ class CategoryController extends Controller
             'data' => new CategoryResource($category->fresh()),
         ], 200);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/active-categories",
+     *     summary="Get all Active categories",
+     *     description="Fetches a list of active categories.",
+     *     operationId="getActiveCategories",
+     *     tags={"Web API's"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Categories fetched successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Categories Fetched Successfully"),
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/CategoryResource")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function webCategories(Request $request): JsonResponse
+    {
+        $query = ProductCategory::active();
+
+        $categories = $query->paginate($request->per_page ?? 10);
+
+        return response()->json([
+            'message' => 'Categories Fetched Successfully',
+            'status' => 200,
+            'data' => CategoryResource::collection($categories),
+            // 'pagination' => self::buildPagination($categories, 'categories')
+        ], 200);
+    }
 }
