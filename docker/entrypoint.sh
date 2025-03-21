@@ -7,11 +7,11 @@ chmod -R 775 /var/www/storage
 chmod -R 775 /var/www/bootstrap/cache
 
 # Wait for MySQL to be ready
-echo "Waiting for MySQL to be ready..."
-while ! php artisan db:monitor --timeout=1 2>/dev/null; do
-    sleep 1
-done
-echo "MySQL connection successful!"
+# echo "Waiting for MySQL to be ready..."
+# while ! php artisan db:monitor --timeout=1 2>/dev/null; do
+#     sleep 1
+# done
+# echo "MySQL connection successful!"
 
 # Run migrations if needed
 php artisan migrate --force
