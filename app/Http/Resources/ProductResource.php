@@ -47,6 +47,7 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'product_name' => $this?->name,
             'product_image' => $this->image_url,
+            'rating' => number_format($this->reviews()->avg('rating'),0) ?? null, // Calculate average rating
             'price' => $this->mrp,
             'weight' => $this->weight,
             'quantity' => $this->stock,

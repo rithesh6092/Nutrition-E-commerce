@@ -16,6 +16,9 @@ echo "MySQL connection successful!"
 # Run migrations if needed
 php artisan migrate --force
 
+# Seeder
+php artisan db:seed --class=ReviewSeeder
+
 # Clear caches
 php artisan config:clear
 php artisan cache:clear

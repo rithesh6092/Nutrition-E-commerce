@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,11 @@ Route::put('/categories/status/{category}', [CategoryController::class, 'updateC
 Route::resource('products', ProductController::class);
 Route::put('/products/status/{product}', [ProductController::class, 'updateProductStatus']);
 
+// Review routes
+Route::apiResource('reviews', ReviewController::class);
+Route::patch('reviews/{review}/status', [ReviewController::class, 'updateStatus']);
+Route::get('product-reviews/{productId}', [ReviewController::class, 'getProductReviews']);
+Route::get('top-rated-products', [ReviewController::class, 'getTopRatedProducts']);
 
 // Order routes
 Route::apiResource('orders', OrderController::class);

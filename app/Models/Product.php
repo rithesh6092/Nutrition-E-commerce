@@ -23,4 +23,9 @@ class Product extends Model
     {
         return $query->where('status', 1);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->where('rating', 5);
+    }
 }
